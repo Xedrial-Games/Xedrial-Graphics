@@ -1,7 +1,7 @@
 using System;
 using Unity.Mathematics;
 
-namespace Xedrial.Rendering.Tilemaps
+namespace Xedrial.Graphics.Tilemaps
 {
     public struct Tile : IEquatable<Tile>
     {

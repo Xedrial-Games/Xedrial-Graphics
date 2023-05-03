@@ -1,20 +1,15 @@
-using System.Linq;
 using System.Collections.Generic;
-
-using UnityEngine;
-using UnityEngine.Rendering;
-
-using Unity.Jobs;
 using Unity.Burst;
-using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Entities;
+using Unity.Jobs;
+using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.Rendering;
+using Xedrial.Utility;
 
-using Xedrial.Utilities;
-using Xedrial.Rendering.Tilemaps;
-
-namespace Xedrial.Rendering.Systems
+namespace Xedrial.Graphics.Tilemaps.Systems
 {
     public partial class TilemapGroupRendererSystem : SystemBase
     {
@@ -23,8 +18,6 @@ namespace Xedrial.Rendering.Systems
             public float4x4 Matrix;
             public float4 Uv;
         }
-
-        public static TilemapGroupRendererSystem Instance { get; private set; }
 
         private Mesh m_Mesh;
         private Camera m_Camera;
@@ -78,10 +71,9 @@ namespace Xedrial.Rendering.Systems
 
         protected override void OnCreate()
         {
-            Instance = this;
             m_Materials.Clear();
             m_Camera = Camera.main;
-            m_Mesh = MeshUtils.AddToMesh(null, Vector3.zero, 0, Vector3.one, Vector2.zero, Vector2.one);
+            m_Mesh = MeshUtils.CreateMesh(Vector3.zero, 0, Vector3.one, Vector2.zero, Vector2.one);
         }
 
         protected override void OnStartRunning()
@@ -154,7 +146,7 @@ namespace Xedrial.Rendering.Systems
 
                     block.SetVectorArray(s_MainTexUV, uvInstancedArray);
 
-                    Graphics.DrawMeshInstanced(
+                    UnityEngine.Graphics.DrawMeshInstanced(
                         m_Mesh,
                         0,
                         tilemapGroup.Material,

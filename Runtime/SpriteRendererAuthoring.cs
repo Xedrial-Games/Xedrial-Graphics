@@ -1,29 +1,48 @@
-using System;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Xedrial.Rendering
+namespace Xedrial.Graphics
 {
     [RequireComponent(typeof(SpriteRenderer))]
     [DisallowMultipleComponent]
-    public class SpriteRendererAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+    public class SpriteRendererAuthoring : MonoBehaviour
     {
-        [SerializeField] private Mesh m_Mesh;
-
-        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem _)
+        private class SpriteRendererBaker : Baker<SpriteRenderer>
         {
-            var spriteRenderer = GetComponent<SpriteRenderer>();
-            
-            dstManager.AddSharedComponentData(entity, new SpriteRendererComponent
+            public override void Bake(SpriteRenderer authoring)
             {
-                Sprite = spriteRenderer.sprite,
-                Material = spriteRenderer.sharedMaterial,
-                Color = spriteRenderer.color,
-                Mesh = m_Mesh == null ? SpriteRendererComponent.CreateMesh(spriteRenderer.sprite) : m_Mesh
-            });
+                var spriteRenderer = GetComponent<SpriteRenderer>();
 
-            if (dstManager.HasComponent<SpriteRenderer>(entity))
-                dstManager.RemoveComponent<SpriteRenderer>(entity);
+                Entity entity = GetEntity(TransformUsageFlags.NonUniformScale);
+                AddComponentObject(entity, new SpriteRendererComponent
+                {
+                    Sprite = spriteRenderer.sprite,
+                    Material = spriteRenderer.sharedMaterial,
+                    Color = spriteRenderer.color,
+                    Mesh = CreateMesh(spriteRenderer.sprite)
+                });
+            }
+
+            private static Mesh CreateMesh(Sprite sprite)
+            {
+                var vertices = new Vector3[sprite.vertices.Length];
+                Vector2[] uv = sprite.uv;
+                int[] triangles = new int[sprite.triangles.Length];
+
+                for (int i = 0; i < sprite.vertices.Length; i++)
+                    vertices[i] = sprite.vertices[i];
+
+                for (int i = 0; i < sprite.triangles.Length; i++)
+                    triangles[i] = sprite.triangles[i];
+
+                return new Mesh
+                {
+                    vertices = vertices,
+                    uv = uv,
+                    triangles = triangles,
+                    name = sprite.name
+                };
+            }
         }
     }
 }

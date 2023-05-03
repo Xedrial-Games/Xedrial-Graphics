@@ -1,11 +1,7 @@
 using System;
-
-using UnityEngine;
 using Unity.Mathematics;
 
-using Xedrial.Rendering.Systems;
-
-namespace Xedrial.Rendering.Tilemaps
+namespace Xedrial.Graphics.Tilemaps
 {
     public struct Tilemap : IDisposable
     {

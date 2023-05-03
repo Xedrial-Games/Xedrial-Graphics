@@ -1,6 +1,6 @@
 {
-    "name": "Xedrial.Rendering",
-    "rootNamespace": "Xedrial.Rendering",
+    "name": "Xedrial.Graphics",
+    "rootNamespace": "Xedrial.Graphics",
     "references": [
         "GUID:734d92eba21c94caba915361bd5ac177",
         "GUID:a5baed0c9693541a5bd947d336ec7659",
